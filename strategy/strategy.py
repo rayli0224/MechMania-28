@@ -28,6 +28,18 @@ class Strategy(object):
         else:
             return False
 
+    def at_cap(self, game_states: GameState, my_player_index: int) -> bool:
+        if game_states.player_state_list[my_player_index].position.x == 4 and game_states.player_state_list[my_player_index].position.y == 4:
+            return True
+        elif game_states.player_state_list[my_player_index].position.x == 4 and game_states.player_state_list[my_player_index].position.y == 5:
+            return True
+        elif game_states.player_state_list[my_player_index].position.x == 5 and game_states.player_state_list[my_player_index].position.y == 4:
+            return True
+        elif game_states.player_state_list[my_player_index].position.x == 5 and game_states.player_state_list[my_player_index].position.y == 5:
+            return True
+        else:
+            return False
+
     """Before the game starts, pick a class for your bot to start with.
     :returns: A game.CharacterClass Enum.
     """
@@ -44,20 +56,6 @@ class Strategy(object):
     @abstractmethod
     def use_action_decision(self, game_states: GameState, my_player_index: int) -> bool:
         return self.at_spawn(game_states, my_player_index)
-        # if game_states.player_state_list[my_player_index].position.x == 0 and game_states.player_state_list[my_player_index].position.y == 0:
-        #     spawn_point = 0
-        #     #return True
-        # elif game_states.player_state_list[my_player_index].position.x == 0 and game_states.player_state_list[my_player_index].position.y == 9:
-        #     spawn_point = 1
-        #     #return True
-        # elif game_states.player_state_list[my_player_index].position.x == 9 and game_states.player_state_list[my_player_index].position.y == 0:
-        #     spawn_point = 2
-        #     #return True
-        # elif game_states.player_state_list[my_player_index].position.x == 9 and game_states.player_state_list[my_player_index].position.y == 9:
-        #     spawn_point = 3
-        #     #return True
-        # #else:
-        # return False
 
     
     """Each turn, pick a position on the board that you want to move towards. Be careful not to
@@ -85,21 +83,24 @@ class Strategy(object):
         #         destination = Position(game_state.player_state_list[my_player_index].position.x - 2, game_state.player_state_list[my_player_index].position.y - 2)
         #         return destination
 
-        if self.spawn_point == 0:
+        if (not self.at_cap(game_states, my_player_index)):
+            if self.spawn_point == 0:
                 destination = Position(game_state.player_state_list[my_player_index].position.x + 1, game_state.player_state_list[my_player_index].position.y + 1)
                 return destination
 
-        elif self.spawn_point == 1:
-            destination = Position(game_state.player_state_list[my_player_index].position.x - 1, game_state.player_state_list[my_player_index].position.y + 1)
-            return destination
+            elif self.spawn_point == 1:
+                destination = Position(game_state.player_state_list[my_player_index].position.x - 1, game_state.player_state_list[my_player_index].position.y + 1)
+                return destination
 
-        elif self.spawn_point == 2:
-            destination = Position(game_state.player_state_list[my_player_index].position.x + 1, game_state.player_state_list[my_player_index].position.y - 1)
-            return destination
+            elif self.spawn_point == 2:
+                destination = Position(game_state.player_state_list[my_player_index].position.x + 1, game_state.player_state_list[my_player_index].position.y - 1)
+                return destination
 
-        elif self.spawn_point == 3:
-            destination = Position(game_state.player_state_list[my_player_index].position.x - 1, game_state.player_state_list[my_player_index].position.y - 1)
-            return destination
+            elif self.spawn_point == 3:
+                destination = Position(game_state.player_state_list[my_player_index].position.x - 1, game_state.player_state_list[my_player_index].position.y - 1)
+                return destination
+        else:
+            return game_state.player_state_list[my_player_index].position
 
     """Each turn, pick a player you would like to attack. Feel free to be a pacifist and attack no
     one but yourself.
@@ -109,7 +110,8 @@ class Strategy(object):
     """
     @abstractmethod
     def attack_action_decision(self, game_state: GameState, my_player_index: int) -> int:
-        return Random().randint(0, 3)
+        # find all players within range around us useing chebychev distance
+        # attack lowest health player
 
     """Each turn, pick an item you want to buy. Return Item.None if you don't think you can
     afford anything.
