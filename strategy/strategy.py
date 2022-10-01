@@ -16,16 +16,16 @@ class Strategy(object):
 
     def at_spawn(self, game_state: GameState, my_player_index: int) -> bool:
         if game_state.player_state_list[my_player_index].position.x == 0 and game_state.player_state_list[my_player_index].position.y == 0:
-            spawn_point = 0
+            self.spawn_point = 0
             return True
         elif game_state.player_state_list[my_player_index].position.x == 0 and game_state.player_state_list[my_player_index].position.y == 9:
-            spawn_point = 1
+            self.spawn_point = 1
             return True
         elif game_state.player_state_list[my_player_index].position.x == 9 and game_state.player_state_list[my_player_index].position.y == 0:
-            spawn_point = 2
+            self.spawn_point = 2
             return True
         elif game_state.player_state_list[my_player_index].position.x == 9 and game_state.player_state_list[my_player_index].position.y == 9:
-            spawn_point = 3
+            self.spawn_point = 3
             return True
         else:
             return False
