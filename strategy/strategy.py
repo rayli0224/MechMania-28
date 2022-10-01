@@ -57,6 +57,14 @@ class Strategy(object):
     """
     @abstractmethod
     def use_action_decision(self, game_state: GameState, my_player_index: int) -> bool:
+        if game_state.player_state_list[my_player_index].position.x == 0 and game_state.player_state_list[my_player_index].position.y == 0:
+            self.spawn_point = 0
+        elif game_state.player_state_list[my_player_index].position.x == 9 and game_state.player_state_list[my_player_index].position.y == 0:
+            self.spawn_point = 1
+        elif game_state.player_state_list[my_player_index].position.x == 0 and game_state.player_state_list[my_player_index].position.y == 9:
+            self.spawn_point = 2
+        elif game_state.player_state_list[my_player_index].position.x == 9 and game_state.player_state_list[my_player_index].position.y == 9:
+            self.spawn_point = 3
         return False
 
     
@@ -95,16 +103,17 @@ class Strategy(object):
     """
     @abstractmethod
     def attack_action_decision(self, game_state: GameState, my_player_index: int) -> int:
-        enemy_list = self.player_list.pop(my_player_index)
+        if my_player_index in self.player_list:
+            self.player_list.pop(my_player_index)
         min_health = 9
         min_health_enemy = -1
-        for i in enemy_list:
+        for i in range(len(self.player_list)):
             if chebyshev_distance(game_state.player_state_list[my_player_index].position, game_state.player_state_list[i].position) <= 1:
                 if game_state.player_state_list[i].health <= min_health:
                     min_health_enemy = i
 
         if min_health_enemy == -1:
-            return enemy_list[0]
+            return self.player_list[0]
         else:
             return min_health_enemy
             
