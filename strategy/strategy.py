@@ -47,7 +47,7 @@ class Strategy(object):
     def use_action_decision(self, game_state: GameState, my_player_index: int) -> bool:
         return self.at_spawn(self, game_state, my_player_index)
 
-
+    
     """Each turn, pick a position on the board that you want to move towards. Be careful not to
     fall out of the board!
 
