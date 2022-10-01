@@ -59,7 +59,7 @@ class Strategy(object):
         # #else:
         # return False
 
-
+    
     """Each turn, pick a position on the board that you want to move towards. Be careful not to
     fall out of the board!
     :param gameState:     A provided GameState object, contains every piece of info on the game board.
