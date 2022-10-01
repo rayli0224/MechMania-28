@@ -73,5 +73,8 @@ class Strategy(object):
     """
     @abstractmethod
     def buy_action_decision(self, game_state: GameState, my_player_index: int) -> Item:
-        pass
+        if at_spawn(self, GameState, my_player_index) and (game_state.player_state_list[my_player_index].item == Item.NONE) and (game_state.player_state_list[my_player_index].gold >= 5):
+            return Item.SPEED_POTION
+        
+
 
