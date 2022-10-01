@@ -6,17 +6,18 @@ import game.character_class
 from game.position import Position
 
 class Strategy(object):
-    def at_spawn(self, game_states: GameState, my_player_index: int) -> None:
-        if game_state.player_state_list[my_player_index].position.x == 0 and game_state.player_state_list[my_player_index].position.y == 0:
-            at_spawn = true
-        elif game_state.player_state_list[my_player_index].position.x == 0 and game_state.player_state_list[my_player_index].position.y == 9:
-            at_spawn = true
-        elif game_state.player_state_list[my_player_index].position.x == 9 and game_state.player_state_list[my_player_index].position.y == 0:
-            at_spawn = true
-        elif game_state.player_state_list[my_player_index].position.x == 9 and game_state.player_state_list[my_player_index].position.y == 9:
-            at_spawn = true
+    @abstractmethod
+    def at_spawn(self, game_states: GameState, my_player_index: int) -> bool:
+        if GameState.player_state_list[my_player_index].position.x == 0 and GameState.player_state_list[my_player_index].position.y == 0:
+            at_spawn = True
+        elif GameState.player_state_list[my_player_index].position.x == 0 and GameState.player_state_list[my_player_index].position.y == 9:
+            at_spawn = True
+        elif GameState.player_state_list[my_player_index].position.x == 9 and GameState.player_state_list[my_player_index].position.y == 0:
+            at_spawn = True
+        elif GameState.player_state_list[my_player_index].position.x == 9 and GameState.player_state_list[my_player_index].position.y == 9:
+            at_spawn = True
         else:
-            at_spawn = false
+            at_spawn = False
 
     """Before the game starts, pick a class for your bot to start with.
 
