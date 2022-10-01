@@ -12,7 +12,7 @@ class Strategy(object):
     direction = 0
     spawn_point = 0
     player_list = [0, 1, 2, 3]
-    enemy_list = player_list.pop(my_player_index)
+
 
     def at_spawn(self, game_state: GameState, my_player_index: int) -> bool:
         if game_state.player_state_list[my_player_index].position.x == 0 and game_state.player_state_list[my_player_index].position.y == 0:
@@ -95,15 +95,16 @@ class Strategy(object):
     """
     @abstractmethod
     def attack_action_decision(self, game_state: GameState, my_player_index: int) -> int:
+        enemy_list = self.player_list.pop(my_player_index)
         min_health = 9
         min_health_enemy = -1
-        for i in self.enemy_list:
+        for i in enemy_list:
             if chebyshev_distance(game_state.player_state_list[my_player_index].position, game_state.player_state_list[i].position) <= 1:
                 if game_state.player_state_list[i].health <= min_health:
                     min_health_enemy = i
 
         if min_health_enemy == -1:
-            return self.enemy_list[0]
+            return enemy_list[0]
         else:
             return min_health_enemy
             
