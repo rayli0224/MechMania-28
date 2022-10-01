@@ -45,7 +45,7 @@ class Strategy(object):
     """
     @abstractmethod
     def use_action_decision(self, game_state: GameState, my_player_index: int) -> bool:
-        return at_spawn(self, GameState, my_player_index)
+        return self.at_spawn(self, GameState, my_player_index)
 
 
     """Each turn, pick a position on the board that you want to move towards. Be careful not to
@@ -58,39 +58,39 @@ class Strategy(object):
     """
     @abstractmethod
     def move_action_decision(self, game_state: GameState, my_player_index: int) -> Position:
-        if at_spawn(self, GameState, my_player_index):
+        if self.at_spawn(self, GameState, my_player_index):
             step = 1
-            if spawn_point == 0:
+            if self.spawn_point == 0:
                 return # move down and right
-            elif spawn_point == 1:
+            elif self.spawn_point == 1:
                 return # move down and left
-            elif spawn_point == 2:
+            elif self.spawn_point == 2:
                 return # move up and right
-            elif spawn_point == 3:
+            elif self.spawn_point == 3:
                 return # move up and left
 
-        if spawn_point == 0:
+        if self.spawn_point == 0:
             if step == 0:
                 step == 1
                 return GameState.player_state_list[my_player_index].position.y + 1
             elif step == 1:
                 step == 0
                 return GameState.player_state_list[my_player_index].position.x + 1
-        elif spawn_point == 1:
+        elif self.spawn_point == 1:
             if step == 0:
                 step == 1
                 return GameState.player_state_list[my_player_index].position.y + 1
             elif step == 1:
                 step == 0
                 return GameState.player_state_list[my_player_index].position.x - 1
-        elif spawn_point == 2:
+        elif self.spawn_point == 2:
             if step == 0:
                 step == 1
                 return GameState.player_state_list[my_player_index].position.y - 1
             elif step == 1:
                 step == 0
                 return GameState.player_state_list[my_player_index].position.x + 1
-        elif spawn_point == 3:
+        elif self.spawn_point == 3:
             if step == 0:
                 step == 1
                 return GameState.player_state_list[my_player_index].position.y - 1
@@ -120,7 +120,7 @@ class Strategy(object):
     """
     @abstractmethod
     def buy_action_decision(self, game_state: GameState, my_player_index: int) -> Item:
-        if at_spawn(self, GameState, my_player_index) and (game_state.player_state_list[my_player_index].item == Item.NONE) and (game_state.player_state_list[my_player_index].gold >= 5):
+        if self.at_spawn(self, GameState, my_player_index) and (game_state.player_state_list[my_player_index].item == Item.NONE) and (game_state.player_state_list[my_player_index].gold >= 5):
             return Item.SPEED_POTION
         
 
