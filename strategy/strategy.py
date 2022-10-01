@@ -5,9 +5,10 @@ import game.character_class
 
 from game.position import Position
 from random import Random
+from util.utility import chebyshev_distance
 
 class Strategy(object):
-
+    
     direction = 0
     spawn_point = 0
     player_list = [0, 1, 2, 3]
@@ -96,13 +97,13 @@ class Strategy(object):
     def attack_action_decision(self, game_state: GameState, my_player_index: int) -> int:
         min_health = 9
         min_health_enemy = -1
-        for i in enemy_list:
+        for i in self.enemy_list:
             if chebyshev_distance(game_state.player_state_list[my_player_index].position, game_state.player_state_list[i].position) <= 1:
                 if game_state.player_state_list[i].health <= min_health:
                     min_health_enemy = i
 
         if min_health_enemy == -1:
-            return enemy_list[0]
+            return self.enemy_list[0]
         else:
             return min_health_enemy
             
