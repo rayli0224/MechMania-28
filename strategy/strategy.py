@@ -93,7 +93,8 @@ class Strategy(object):
         elif self.spawn_point == 3:
             if step == 0:
                 step == 1
-                return GameState.player_state_list[my_player_index].position.y - 1
+                destination = position(GameState.player_state_list[my_player_index].position.x, GameState.player_state_list[my_player_index].position.y - 1)
+                return destionation
             elif step == 1:
                 step == 0
                 return GameState.player_state_list[my_player_index].position.x - 1
