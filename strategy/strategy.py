@@ -11,7 +11,7 @@ class Strategy(object):
     spawn_point = 0
 
     @abstractmethod
-    def at_spawn(self, game_states: GameState, my_player_index: int) -> bool:
+    def at_spawn(self, game_state: GameState, my_player_index: int) -> bool:
         if GameState.player_state_list[my_player_index].position.x == 0 and GameState.player_state_list[my_player_index].position.y == 0:
             spawn_point = 0
             return True
@@ -45,7 +45,7 @@ class Strategy(object):
     """
     @abstractmethod
     def use_action_decision(self, game_state: GameState, my_player_index: int) -> bool:
-        return self.at_spawn(self, GameState, my_player_index)
+        return self.at_spawn(self, game_state, my_player_index)
 
 
     """Each turn, pick a position on the board that you want to move towards. Be careful not to
@@ -58,7 +58,7 @@ class Strategy(object):
     """
     @abstractmethod
     def move_action_decision(self, game_state: GameState, my_player_index: int) -> Position:
-        if self.at_spawn(self, GameState, my_player_index) and (game_state.player_state_list[my_player_index].item == Item.SPEED_POTION):
+        if self.at_spawn(self, game_state, my_player_index) and (game_state.player_state_list[my_player_index].item == Item.SPEED_POTION):
             if self.spawn_point == 0:
                 destination = Position(GameState.player_state_list[my_player_index].position.x + 2, GameState.player_state_list[my_player_index].position.y + 2)
                 return destination
@@ -113,7 +113,7 @@ class Strategy(object):
     """
     @abstractmethod
     def buy_action_decision(self, game_state: GameState, my_player_index: int) -> Item:
-        if self.at_spawn(self, GameState, my_player_index) and (game_state.player_state_list[my_player_index].item == Item.NONE) and (game_state.player_state_list[my_player_index].gold >= 5):
+        if self.at_spawn(self, game_statae, my_player_index) and (game_state.player_state_list[my_player_index].item == Item.NONE) and (game_state.player_state_list[my_player_index].gold >= 5):
             return Item.SPEED_POTION
         
 
