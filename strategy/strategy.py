@@ -6,18 +6,26 @@ import game.character_class
 from game.position import Position
 
 class Strategy(object):
+
+    step = 0
+    spawn_point = 0
+
     @abstractmethod
     def at_spawn(self, game_states: GameState, my_player_index: int) -> bool:
         if GameState.player_state_list[my_player_index].position.x == 0 and GameState.player_state_list[my_player_index].position.y == 0:
-            at_spawn = True
+            spawn_point = 0
+            return True
         elif GameState.player_state_list[my_player_index].position.x == 0 and GameState.player_state_list[my_player_index].position.y == 9:
-            at_spawn = True
+            spawn_point = 1
+            return True
         elif GameState.player_state_list[my_player_index].position.x == 9 and GameState.player_state_list[my_player_index].position.y == 0:
-            at_spawn = True
+            spawn_point = 2
+            return True
         elif GameState.player_state_list[my_player_index].position.x == 9 and GameState.player_state_list[my_player_index].position.y == 9:
-            at_spawn = True
+            spawn_point = 3
+            return True
         else:
-            at_spawn = False
+            return False
 
     """Before the game starts, pick a class for your bot to start with.
 
@@ -50,7 +58,45 @@ class Strategy(object):
     """
     @abstractmethod
     def move_action_decision(self, game_state: GameState, my_player_index: int) -> Position:
-        pass
+        if at_spawn(self, GameState, my_player_index):
+            step = 1
+            if spawn_point == 0:
+                return # move down and right
+            elif spawn_point == 1:
+                return # move down and left
+            elif spawn_point == 2:
+                return # move up and right
+            elif spawn_point == 3:
+                return # move up and left
+
+        if spawn_point == 0:
+            if step == 0:
+                step == 1
+                return GameState.player_state_list[my_player_index].position.y + 1
+            elif step == 1:
+                step == 0
+                return GameState.player_state_list[my_player_index].position.x + 1
+        elif spawn_point == 1:
+            if step == 0:
+                step == 1
+                return GameState.player_state_list[my_player_index].position.y + 1
+            elif step == 1:
+                step == 0
+                return GameState.player_state_list[my_player_index].position.x - 1
+        elif spawn_point == 2:
+            if step == 0:
+                step == 1
+                return GameState.player_state_list[my_player_index].position.y - 1
+            elif step == 1:
+                step == 0
+                return GameState.player_state_list[my_player_index].position.x + 1
+        elif spawn_point == 3:
+            if step == 0:
+                step == 1
+                return GameState.player_state_list[my_player_index].position.y - 1
+            elif step == 1:
+                step == 0
+                return GameState.player_state_list[my_player_index].position.x - 1
 
     """Each turn, pick a player you would like to attack. Feel free to be a pacifist and attack no
     one but yourself.
