@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "jsonpickle": "^1.1.2",
     "mm28": "^1.1.0"
   }
 }
