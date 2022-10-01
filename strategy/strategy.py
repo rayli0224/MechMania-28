@@ -10,32 +10,33 @@ class Strategy(object):
 
     direction = 0
     spawn_point = 0
+    player_list = [0, 1, 2, 3]
+    enemy_list = player_list.pop(my_player_index)
 
-    
-    def at_spawn(self, game_states: GameState, my_player_index: int) -> bool:
-        if game_states.player_state_list[my_player_index].position.x == 0 and game_states.player_state_list[my_player_index].position.y == 0:
+    def at_spawn(self, game_state: GameState, my_player_index: int) -> bool:
+        if game_state.player_state_list[my_player_index].position.x == 0 and game_state.player_state_list[my_player_index].position.y == 0:
             spawn_point = 0
             return True
-        elif game_states.player_state_list[my_player_index].position.x == 0 and game_states.player_state_list[my_player_index].position.y == 9:
+        elif game_state.player_state_list[my_player_index].position.x == 0 and game_state.player_state_list[my_player_index].position.y == 9:
             spawn_point = 1
             return True
-        elif game_states.player_state_list[my_player_index].position.x == 9 and game_states.player_state_list[my_player_index].position.y == 0:
+        elif game_state.player_state_list[my_player_index].position.x == 9 and game_state.player_state_list[my_player_index].position.y == 0:
             spawn_point = 2
             return True
-        elif game_states.player_state_list[my_player_index].position.x == 9 and game_states.player_state_list[my_player_index].position.y == 9:
+        elif game_state.player_state_list[my_player_index].position.x == 9 and game_state.player_state_list[my_player_index].position.y == 9:
             spawn_point = 3
             return True
         else:
             return False
 
-    def at_cap(self, game_states: GameState, my_player_index: int) -> bool:
-        if game_states.player_state_list[my_player_index].position.x == 4 and game_states.player_state_list[my_player_index].position.y == 4:
+    def at_cap(self, game_state: GameState, my_player_index: int) -> bool:
+        if game_state.player_state_list[my_player_index].position.x == 4 and game_state.player_state_list[my_player_index].position.y == 4:
             return True
-        elif game_states.player_state_list[my_player_index].position.x == 4 and game_states.player_state_list[my_player_index].position.y == 5:
+        elif game_state.player_state_list[my_player_index].position.x == 4 and game_state.player_state_list[my_player_index].position.y == 5:
             return True
-        elif game_states.player_state_list[my_player_index].position.x == 5 and game_states.player_state_list[my_player_index].position.y == 4:
+        elif game_state.player_state_list[my_player_index].position.x == 5 and game_state.player_state_list[my_player_index].position.y == 4:
             return True
-        elif game_states.player_state_list[my_player_index].position.x == 5 and game_states.player_state_list[my_player_index].position.y == 5:
+        elif game_state.player_state_list[my_player_index].position.x == 5 and game_state.player_state_list[my_player_index].position.y == 5:
             return True
         else:
             return False
@@ -54,8 +55,8 @@ class Strategy(object):
     :returns: If you want to use your item
     """
     @abstractmethod
-    def use_action_decision(self, game_states: GameState, my_player_index: int) -> bool:
-        return self.at_spawn(game_states, my_player_index)
+    def use_action_decision(self, game_state: GameState, my_player_index: int) -> bool:
+        return False
 
     
     """Each turn, pick a position on the board that you want to move towards. Be careful not to
@@ -66,24 +67,7 @@ class Strategy(object):
     """
     @abstractmethod
     def move_action_decision(self, game_state: GameState, my_player_index: int) -> Position:
-        # if self.use_action_decision(game_state, my_player_index) and (game_state.player_state_list[my_player_index].item == Item.SPEED_POTION):
-        #     if self.spawn_point == 0:
-        #         destination = Position(game_state.player_state_list[my_player_index].position.x + 2, game_state.player_state_list[my_player_index].position.y + 2)
-        #         return destination
-
-        #     elif self.spawn_point == 1:
-        #         destination = Position(game_state.player_state_list[my_player_index].position.x - 2, game_state.player_state_list[my_player_index].position.y + 2)
-        #         return destination
-
-        #     elif self.spawn_point == 2:
-        #         destination = Position(game_state.player_state_list[my_player_index].position.x + 2, game_state.player_state_list[my_player_index].position.y - 2)
-        #         return destination
-
-        #     elif self.spawn_point == 3:
-        #         destination = Position(game_state.player_state_list[my_player_index].position.x - 2, game_state.player_state_list[my_player_index].position.y - 2)
-        #         return destination
-
-        if (not self.at_cap(game_states, my_player_index)):
+        if (not self.at_cap(game_state, my_player_index)):
             if self.spawn_point == 0:
                 destination = Position(game_state.player_state_list[my_player_index].position.x + 1, game_state.player_state_list[my_player_index].position.y + 1)
                 return destination
@@ -110,9 +94,18 @@ class Strategy(object):
     """
     @abstractmethod
     def attack_action_decision(self, game_state: GameState, my_player_index: int) -> int:
-        # find all players within range around us useing chebychev distance
-        # attack lowest health player
+        min_health = 9
+        min_health_enemy = -1
+        for i in enemy_list:
+            if chebyshev_distance(game_state.player_state_list[my_player_index].position, game_state.player_state_list[i].position) <= 1:
+                if game_state.player_state_list[i].health <= min_health:
+                    min_health_enemy = i
 
+        if min_health_enemy == -1:
+            return enemy_list[0]
+        else:
+            return min_health_enemy
+            
     """Each turn, pick an item you want to buy. Return Item.None if you don't think you can
     afford anything.
     :param gameState:     A provided GameState object, contains every piece of info on the game board.
